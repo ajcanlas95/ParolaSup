@@ -61,10 +61,25 @@ body() {
 				exit 1
 		esac
 		;;
+	myfirstsetup)
+		DEV=`body status | grep STATE |awk '{print $2}'`
+		case $DEV in
+			UP)
+				IP=`aws ec2 describe-instances --instance-ids $instance --output text | grep ASSOCIATION | uniq | awk {'print $4'}`
+				ssh-copy-id -p 10905 ilaw@$IP
+				;;
+			DOWN)
+				body start
+				body myfirstsetup
+				;;
+			*)
+				exit 1
+		esac
+		;;
 	*)
 		echo "Usage: parola {start|stop|status|access}"
 		exit 1
 	esac
 }
 
-body $1 $2
+body $1

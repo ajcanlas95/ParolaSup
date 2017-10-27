@@ -16,6 +16,8 @@ VPI=`echo $PIP | awk {'print $1'}`
 VAW=`echo $AWS | cut -d '/' -f 1`
 VALIDATION=0
 
+
+
 if [ $VPY == "Python" ]; then
 	echo "Python installed"
 	if [ $VPI == "pip" ]; then
@@ -36,7 +38,14 @@ fi
 if [ $VALIDATION == 1 ];then
 	cp source/parola-v0.0.1 /bin/bash/parola
 	chmod +x /bin/bash/parola
-	echo "Run "aws configure" and get the details from AJ"
+	echo "Running "aws configure" and get the details from AJ"
+	aws configure
+	if [ -f ~/.ssh/id_rsa.pub ]; then
+		./source/parola myfirstsetup
+	else
+		ssh-keygen
+		./source/parola myfirstsetup
+	fi
 	echo "----- End of Installation -----"	
 else
 	echo "----- End of Installation with Errors -----"
