@@ -36,6 +36,7 @@ else
 fi
 
 if [ $VALIDATION == 1 ];then
+	chmod +x source/parola-v0.0.1
 	cp source/parola-v0.0.1 /bin/parola
 	chmod +x /bin/parola
 	echo "Running "aws configure" and get the details from AJ"
