@@ -41,10 +41,10 @@ if [ $VALIDATION == 1 ];then
 	echo "Running "aws configure" and get the details from AJ"
 	aws configure
 	if [ -f ~/.ssh/id_rsa.pub ]; then
-		./source/parola myfirstsetup
+		./source/parolav0.0.1 myfirstsetup
 	else
 		ssh-keygen
-		./source/parola myfirstsetup
+		./source/parola-v0.0.1 myfirstsetup
 	fi
 	echo "----- End of Installation -----"	
 else
