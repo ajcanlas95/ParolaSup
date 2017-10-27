@@ -36,8 +36,8 @@ else
 fi
 
 if [ $VALIDATION == 1 ];then
-	cp source/parola-v0.0.1 /bin/bash/parola
-	chmod +x /bin/bash/parola
+	cp source/parola-v0.0.1 /bin/parola
+	chmod +x /bin/parola
 	echo "Running "aws configure" and get the details from AJ"
 	aws configure
 	if [ -f ~/.ssh/id_rsa.pub ]; then
