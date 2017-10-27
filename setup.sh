@@ -10,7 +10,7 @@ PYTHON=`cat .dependency1`
 PIP=`cat .dependency2`
 AWS=`cat .dependency3`
 
-rm .dependency*
+rm -f .dependency*
 VPY=`echo $PYTHON | awk {'print $1'}`
 VPI=`echo $PIP | awk {'print $1'}`
 VAW=`echo $AWS | cut -d '/' -f 1`
