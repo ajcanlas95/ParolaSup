@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# check dependencies`
+echo "----- Start Installation -----"
+python --version &> .dependency1
+pip --version &> .dependency2
+aws --version &> .dependency3
+
+PYTHON=`cat .dependency1`
+PIP=`cat .dependency2`
+AWS=`cat .dependency3`
+
+rm .dependency*
+VPY=`echo $PYTHON | awk {'print $1'}`
+VPI=`echo $PIP | awk {'print $1'}`
+VAW=`echo $AWS | cut -d '/' -f 1`
+VALIDATION=0
+
+if [ $VPY == "Python" ]; then
+	echo "Python installed"
+	if [ $VPI == "pip" ]; then
+		echo "Pip installed"
+		if [ $VAW == "aws-cli" ];then
+			echo "AWS Cli is installed"
+			VALIDATION=1
+		else
+			echo "Installation Error: AWS-CLI not installed"
+		fi
+	else
+		echo "Installation Error: Pip not installed"
+	fi
+else
+	echo "Installation Error: Python not installed"
+fi
+
+if [ $VALIDATION == 1 ];then
+	cp source/parola-v0.0.1 /bin/bash/parola
+	chmod +x /bin/bash/parola
+	echo "Run "aws configure" and get the details from AJ"
+	echo "----- End of Installation -----"	
+else
+	echo "----- End of Installation with Errors -----"
+fi

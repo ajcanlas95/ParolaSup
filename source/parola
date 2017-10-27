@@ -1,0 +1,70 @@
+#!/bin/bash
+
+instance="i-08efb0b7140a19949"
+
+awsinstances() {
+	case "$1" in
+	describe-instances)
+		STATE=`aws ec2 $1 --instance-ids $instance --output text | grep STATE | grep -v REASON | awk {'print $3'}`
+		case "$STATE" in
+			running)
+               			IP=`aws ec2 $1 --instance-ids $instance --output text | grep ASSOCIATION | uniq | awk {'print $4'}`
+                		echo "STATE: UP"
+				echo "Use 'parola access' to access the instance"
+				echo "To access the webpage http://$IP"
+				;;
+			shutting-down | pending | terminated | stopping |stopped)
+				echo "STATE: DOWN"
+				echo "Use: 'parola start' to start the instance"
+				;;
+			*)
+				exit 1
+		esac
+				
+		;;
+	start-instances | stop-instances)
+		aws ec2 $1 --instance-ids $instance --output text
+		;;
+	wala)
+		IP=`aws ec2 describe-instances --instance-ids $instance --output text | grep ASSOCIATION | uniq | awk {'print $4'}`
+		ssh -p 10905 ilaw@$IP
+		;;
+	*)
+		echo $"Usage: parola {start|stop|status|access}"
+		exit 1
+	esac
+}
+
+
+
+body() {
+	case "$1" in
+	start)
+		awsinstances start-instances
+		;;
+	stop)
+		awsinstances stop-instances
+		;;
+	status)
+		awsinstances describe-instances
+		;;
+	access)
+		DEV=`body status | grep STATE |awk '{print $2}'`
+		case $DEV in
+			UP)
+				awsinstances wala
+				;;
+			DOWN)
+				echo "Instance is down please start the instance first"
+				;;
+			*)
+				exit 1
+		esac
+		;;
+	*)
+		echo "Usage: parola {start|stop|status|access}"
+		exit 1
+	esac
+}
+
+body $1 $2
